@@ -1,4 +1,5 @@
-{files ? (
+{
+  files ? (
     <>
       <Grid item xs={12}>
         <ChipsInput />
@@ -8,15 +9,10 @@
           label="Attached File:"
           borderType="square"
           onClick={handleChipClick}
-          value={
-            files.map((attachment) => attachment?.name || "") || []
-          }
+          value={files.map((attachment) => attachment?.name || "") || []}
           icon={<FileIcon width={13} height={13} />}
           onDeleteChip={(index) =>
-            setFiles([
-              ...files.slice(0, index),
-              ...files.slice(index + 1),
-            ])
+            setFiles([...files.slice(0, index), ...files.slice(index + 1)])
           }
         />
         {files ? (
@@ -30,4 +26,5 @@
         ) : null}
       </Grid>
     </>
-  ) : null}
+  ) : null;
+}

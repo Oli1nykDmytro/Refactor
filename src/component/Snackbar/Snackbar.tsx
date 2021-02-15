@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import MuiAlert from "@material-ui/lab/Alert";
 import { Snackbar } from "@material-ui/core";
 
-
 export const SnackbarComponents = (): React.FC => {
   const [successMessageOpen, setSuccessMessageOpen] = useState(false);
   const [

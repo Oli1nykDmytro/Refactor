@@ -1,7 +1,9 @@
 import React, { useReducer, useEffect, useState } from "react";
 import {
   Button,
+
   Grid,
+
   CircularProgress,
   Box,
 } from "@material-ui/core";
@@ -16,8 +18,8 @@ import {reducer, initialEventForm} from '../../reducer/reducer'
 import { CloseOutlined as CloseOutlinedIcon } from "@material-ui/icons";
 
 import DateInput from './DateInput/input'
-import Notification from './Notification'
 
+import HeaderPart from './HeaderPart/HeaderPart'
 import {
   File,
   User,
@@ -374,39 +376,9 @@ const convertTimeStringToNumber = (timeString: string) =>
                 Add Reminder
               </Button>
             </Grid>
-            {files ? (
-              <>
-                <Grid item xs={12}>
-                  <ChipsInput />
-                  <ChipsInput
-                    isLineType
-                    type="files"
-                    label="Attached File:"
-                    borderType="square"
-                    onClick={handleChipClick}
-                    value={
-                      files.map((attachment) => attachment?.name || "") || []
-                    }
-                    icon={<FileIcon width={13} height={13} />}
-                    onDeleteChip={(index) =>
-                      setFiles([
-                        ...files.slice(0, index),
-                        ...files.slice(index + 1),
-                      ])
-                    }
-                  />
-                  {files ? (
-                    <PdfPreview
-                      open={previewOpen}
-                      setOpen={setPreviewOpen}
-                      files={files as File[]}
-                      selectedFileIndex={currentAttachmentIndex}
-                      setFileIndex={setCurrentAttachmentIndex}
-                    />
-                  ) : null}
-                </Grid>
-              </>
-            ) : null}
+
+            <FilesComponent files={files}/>
+            
             <Grid item xs={12}>
               <TextField
                 fullWidth

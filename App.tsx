@@ -1,22 +1,21 @@
 import React, { useReducer, useEffect, useState } from "react";
 
+import { Dialog, DialogTitle, DialogContent, Grid } from "@material-ui/core";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Grid} from "@material-ui/core";
-import {EventDetailsProps, NotificationItem} from './src/typeDefs/type-details'
+  EventDetailsProps,
+  NotificationItem,
+} from "./src/typeDefs/type-details";
 
-//component 
-import FormComponent from './src/component/Form'
-import SnackbarComponents from './src/component/Snackbar'
-import {reducer, initialEventForm} from './src/redux/reducer'
-import {createEventMutation}  from './src/grapgql/graphq'
-//style 
-import useStyles from './src/style/type-style'
+//component
+import FormComponent from "./src/component/Form";
+import SnackbarComponents from "./src/component/Snackbar";
+import { reducer, initialEventForm } from "./src/redux/reducer";
+import { createEventMutation } from "./src/grapgql/graphq";
+//style
+import useStyles from "./src/style/type-style";
 
-// periodTime 
-import { periodTypes, periodRate } from './src/timePeriod/period'
+// periodTime
+import { periodTypes, periodRate } from "./src/timePeriod/period";
 
 import convertMStoTimeLeft from "../common/convertMSToTimeLeft";
 
@@ -24,21 +23,21 @@ type ActionType = "userId" | "periodType" | "period";
 type PeriodType = "Minute" | "Hour" | "Day" | "Week";
 
 type EventDetailsProps = {
-    event?: Event;
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    onDialogClose?: () => void;
-    refetchEvents?: () => void;
-    message?: Maybe<Message>;
-    onEventCreation?: (eventId: string, event: Event) => void;
-    onCreateEventFromMessageItem?: (eventId: string, event: Event) => void;
-    currentUser: User;
-    onEventDelition?: () => void;
-    messageId?: string;
-    messageTitle?: string | null | undefined;
-    isMessageDone?: boolean | null | undefined;
-    isMessageDeleted?: boolean | null | undefined;
-  };
+  event?: Event;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  onDialogClose?: () => void;
+  refetchEvents?: () => void;
+  message?: Maybe<Message>;
+  onEventCreation?: (eventId: string, event: Event) => void;
+  onCreateEventFromMessageItem?: (eventId: string, event: Event) => void;
+  currentUser: User;
+  onEventDelition?: () => void;
+  messageId?: string;
+  messageTitle?: string | null | undefined;
+  isMessageDone?: boolean | null | undefined;
+  isMessageDeleted?: boolean | null | undefined;
+};
 
 const EventDetails = ({
   event,
@@ -62,8 +61,6 @@ const EventDetails = ({
   } = useGetSharedAccessQuery();
 
   const classes = useStyles();
-
-
 
   const [eventForm, dispatch] = useReducer(reducer, initialEventForm);
 
@@ -95,7 +92,6 @@ const EventDetails = ({
       setOpen(false);
     }
   }, [createEventData, createError, setOpen]);
-
 
   // useEffect(() => {
   //   if (!sharedDataLoading && sharedData?.sharedAccess?.targetUsers) {
@@ -176,15 +172,13 @@ const EventDetails = ({
     }
   };
 
-
   // 16:00 => 1600 for number mask
- 
 
   const handleClose = () => setIsOpenModalConfirm(false);
 
   return (
     <>
-    <SnackbarComponents/>
+      <SnackbarComponents />
       <Dialog
         classes={{
           paper: classes.modal,
@@ -208,7 +202,7 @@ const EventDetails = ({
           </Grid>
         </DialogTitle>
         <DialogContent>
-          <FormComponent/>
+          <FormComponent />
         </DialogContent>
       </Dialog>
       <EventDeleteModal
