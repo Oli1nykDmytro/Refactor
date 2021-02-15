@@ -14,6 +14,17 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 
+
+
+import DateFnsUtils from "@date-io/date-fns";
+import { PdfPreview } from "./";
+import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import { red, blue } from "@material-ui/core/colors";
+
+import { ReactComponent as ErrorOutlineIcon } from "../icons/errorOutline.svg";
+import { ReactComponent as FileIcon } from "../icons/fileIcon.svg";
+
+
 import {
   File,
   User,
@@ -21,8 +32,15 @@ import {
   GetSharedAccessQuery,
 } from "../graphql/generated";
 
+
+import TextField from "./TextField";
+import ChipsInput from "./ChipsInput";
+import { ReactComponent as DropdownIcon } from "../icons/dropdownRegular.svg";
+import NumberFormatTime from "../common/NumberFormatTime";
+import { Link } from "react-router-dom";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import useStyles from "./src/style/type-style";
+
 const classes = useStyles();
 
 export const Form = (): React.FC => {
@@ -64,8 +82,56 @@ export const Form = (): React.FC => {
     setCalendarChips(chipValues);
   }, [event, sharedDataAccess, currentUser]);
 
+  const hasGraphQlConflictError = () => {
+    if (createError?.graphQLErrors && createError?.graphQLErrors.length > 0) {
+      const error = createError.graphQLErrors[0] as any;
+      if (error.code === "has_conflict") {
+        return true;
+      }
+    }
+
+    if (updateError?.graphQLErrors && updateError?.graphQLErrors.length > 0) {
+      const error = updateError.graphQLErrors[0] as any;
+      if (error.code === "has_conflict") {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+
+  const normaliseEventForm = (): UpdateEventInput => {
+    const startTime = moment(
+      `${eventForm.startDate} ${eventForm.startTime}`,
+      "l HH:mm",
+    ).format();
+
+    const endTime = moment(
+      `${eventForm.endDate} ${eventForm.endTime}`,
+      "l HH:mm",
+    ).format();
+
+    let startTimeUTC = startTime;
+    let endTimeUTC = endTime;
+    // Converting dates to UTC for all day,
+    // because nylas shows wrong date range with local time
+    if (allDay) {
+      startTimeUTC = moment(startTime).utcOffset(0, true).format();
+      endTimeUTC = moment(endTime).utcOffset(0, true).format();
+    }
+
+
   const handleFormSave = async (eventDom: React.FormEvent<HTMLFormElement>) => {
     eventDom.preventDefault();
+
+const convertTimeStringToNumber = (timeString: string) =>
+    timeString.split(":").join("");
+
+ const handleChipClick = (attachmentIndex: number) => {
+    setCurrentAttachmentIndex(attachmentIndex);
+    setPreviewOpen(true);
+  };
 
     const {
       title,

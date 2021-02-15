@@ -1,5 +1,6 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, IconButton } from "@material-ui/core";
+import { CloseOutlined as CloseOutlinedIcon } from "@material-ui/icons";
 
 export const Modal = (): React.FC => {
   return (
