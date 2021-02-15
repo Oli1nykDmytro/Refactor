@@ -15,7 +15,6 @@ import {
 } from "@material-ui/core";
 
 
-
 import DateFnsUtils from "@date-io/date-fns";
 import { PdfPreview } from "./";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
@@ -23,7 +22,7 @@ import { red, blue } from "@material-ui/core/colors";
 
 import { ReactComponent as ErrorOutlineIcon } from "../icons/errorOutline.svg";
 import { ReactComponent as FileIcon } from "../icons/fileIcon.svg";
-
+import {reducer, initialEventForm} from '../../reducer/reducer'
 
 import {
   File,
@@ -41,7 +40,9 @@ import { Link } from "react-router-dom";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import useStyles from "./src/style/type-style";
 
-const classes = useStyles();
+
+
+
 
 export const Form = (): React.FC => {
   const [allDay, setAllDay] = useState<boolean>(false);
@@ -51,13 +52,17 @@ export const Form = (): React.FC => {
   const [sharedDataAccess, setSharedDataAccess] = useState<
     GetSharedAccessQuery | undefined | null
   >(null);
-
+  const [previewOpen, setPreviewOpen] = React.useState(false);
+  const [currentAttachmentIndex, setCurrentAttachmentIndex] = React.useState(0);
+  const [eventForm, dispatch] = useReducer(reducer, initialEventForm);
   const link = createLink(
     currentUser.email,
     messageId,
     isMessageDone,
     isMessageDeleted
   );
+
+  const classes = useStyles();
 
   useEffect(() => {
     const chipSharedAccessValues: string[] = sharedDataAccess?.sharedAccess
@@ -202,6 +207,17 @@ const convertTimeStringToNumber = (timeString: string) =>
     }
   };
 
+  useEffect(() => {
+    setSharedDataAccess(sharedData);
+  }, [sharedData]);
+
+  useEffect(() => {
+    dispatch({
+      field: "reset",
+    });
+  }, [event, notifications, sharingUsers]);
+
+
   const handleStartDateChange = (date: any) => {
     if (!date) return;
     const isAfter = moment(moment(date).format("l")).isAfter(eventForm.endDate);
@@ -218,6 +234,9 @@ const convertTimeStringToNumber = (timeString: string) =>
     });
   };
 
+
+
+  
   const handleAllDay = () => {
     if (allDay) {
       setAllDay(false);
