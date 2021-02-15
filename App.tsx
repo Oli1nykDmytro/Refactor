@@ -19,7 +19,6 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 
-
 import { CloseOutlined as CloseOutlinedIcon } from "@material-ui/icons";
 
 import { PdfPreview } from "./";
@@ -39,17 +38,19 @@ import parse from "date-fns/parse";
 import { ReactComponent as ErrorOutlineIcon } from "../icons/errorOutline.svg";
 import { ReactComponent as FileIcon } from "../icons/fileIcon.svg";
 
+import {
+  EventDetailsProps,
+  NotificationItem,
+} from "./src/typeDefs/type-details";
 
-import {EventDetailsProps, NotificationItem} from './src/typeDefs/type-details'
+//component
+import FormComponent from "./src/component/Form";
+import SnackbarComponents from "./src/component/Snackbar";
+//style
+import useStyles from "./src/style/type-style";
 
-
-//component 
-import FormComponent from './src/component/Form'
-//style 
-import useStyles from './src/style/type-style'
-
-// periodTime 
-import { periodTypes, periodRate } from './src/timePeriod/period'
+// periodTime
+import { periodTypes, periodRate } from "./src/timePeriod/period";
 import {
   File,
   Event,
@@ -78,7 +79,6 @@ import NumberFormatTime from "../common/NumberFormatTime";
 import { Link } from "react-router-dom";
 // import EventDeleteModal from "./EventDeleteModal";
 
-
 interface EventForm {
   startDate: string;
   startTime: string;
@@ -91,31 +91,27 @@ type ActionType = "userId" | "periodType" | "period";
 type PeriodType = "Minute" | "Hour" | "Day" | "Week";
 
 type EventDetailsProps = {
-    event?: Event;
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    onDialogClose?: () => void;
-    refetchEvents?: () => void;
-    message?: Maybe<Message>;
-    onEventCreation?: (eventId: string, event: Event) => void;
-    onCreateEventFromMessageItem?: (eventId: string, event: Event) => void;
-    currentUser: User;
-    onEventDelition?: () => void;
-    messageId?: string;
-    messageTitle?: string | null | undefined;
-    isMessageDone?: boolean | null | undefined;
-    isMessageDeleted?: boolean | null | undefined;
-  };
-
-
-
-
+  event?: Event;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  onDialogClose?: () => void;
+  refetchEvents?: () => void;
+  message?: Maybe<Message>;
+  onEventCreation?: (eventId: string, event: Event) => void;
+  onCreateEventFromMessageItem?: (eventId: string, event: Event) => void;
+  currentUser: User;
+  onEventDelition?: () => void;
+  messageId?: string;
+  messageTitle?: string | null | undefined;
+  isMessageDone?: boolean | null | undefined;
+  isMessageDeleted?: boolean | null | undefined;
+};
 
 export const createLink = (
   userEmail: string,
   messageId: string | null | undefined,
   isDone: boolean | null | undefined,
-  isDeleted: boolean | null | undefined,
+  isDeleted: boolean | null | undefined
 ): string => {
   if (isDone) {
     return `/messages/done/${messageId}`;
@@ -219,16 +215,16 @@ const EventDetails = ({
     ...message?.eventInfo,
     ...event,
     startDate: moment(
-      event?.startTime || message?.eventInfo?.startTime || now,
+      event?.startTime || message?.eventInfo?.startTime || now
     ).format("l"),
     startTime: moment(
-      event?.startTime || message?.eventInfo?.startTime || now,
+      event?.startTime || message?.eventInfo?.startTime || now
     ).format("HH:mm"),
     endTime: moment(
-      event?.endTime || message?.eventInfo?.endTime || oneHourFuture,
+      event?.endTime || message?.eventInfo?.endTime || oneHourFuture
     ).format("HH:mm"),
     endDate: moment(
-      event?.endTime || message?.eventInfo?.startTime || nowDateEndDate,
+      event?.endTime || message?.eventInfo?.startTime || nowDateEndDate
     ).format("l"),
     notifications: notifications,
   };
@@ -236,7 +232,7 @@ const EventDetails = ({
   const reducer = (
     // TODO: Fix the types. In rush atm to demo this.
     state: any,
-    { field, value }: { field: string; value?: string },
+    { field, value }: { field: string; value?: string }
   ) => {
     if (field === "reset") {
       return initialEventForm;
@@ -255,7 +251,7 @@ const EventDetails = ({
         return {
           ...state,
           notifications: state.notifications.filter(
-            (el: NotificationItem, i: number) => i !== Number(index),
+            (el: NotificationItem, i: number) => i !== Number(index)
           ),
         };
       } else if (action === "periodType") {
@@ -292,7 +288,7 @@ const EventDetails = ({
       if (value) {
         const timeDif = differenceInMinutes(
           new Date(event?.endTime || oneHourFuture),
-          new Date(event?.startTime || now),
+          new Date(event?.startTime || now)
         );
 
         const parsedDate = parse(value, "HH:mm", new Date());
@@ -313,7 +309,7 @@ const EventDetails = ({
       if (value) {
         const timeDif = differenceInDays(
           new Date(event?.endTime || oneHourFuture),
-          new Date(event?.startTime || now),
+          new Date(event?.startTime || now)
         );
 
         const addDaysDate = addDays(new Date(value), timeDif);
@@ -393,12 +389,12 @@ const EventDetails = ({
   const normaliseEventForm = (): UpdateEventInput => {
     const startTime = moment(
       `${eventForm.startDate} ${eventForm.startTime}`,
-      "l HH:mm",
+      "l HH:mm"
     ).format();
 
     const endTime = moment(
       `${eventForm.endDate} ${eventForm.endTime}`,
-      "l HH:mm",
+      "l HH:mm"
     ).format();
 
     let startTimeUTC = startTime;
@@ -431,7 +427,6 @@ const EventDetails = ({
       attachmentIds: files.map((attach) => attach.id),
     };
   };
-
 
   const handleDeleteEvent = async () => {
     if ("id" in eventForm) {
@@ -471,7 +466,6 @@ const EventDetails = ({
     }
   }, [createEventData, createError, setOpen]);
 
-
   useEffect(() => {
     if (!sharedDataLoading && sharedData?.sharedAccess?.targetUsers) {
       let sharedUsers: User[] = [];
@@ -509,7 +503,7 @@ const EventDetails = ({
                   period: value.toString(),
                 });
               });
-            },
+            }
           );
         } else {
           sharedUsers.forEach((sharedUser) => {
@@ -523,7 +517,7 @@ const EventDetails = ({
       } else if (event?.notifications && event?.notifications?.length > 0) {
         event.notifications.forEach((notififcation) => {
           const { type, value } = convertMStoTimeLeft(
-            notififcation.notifyBefore,
+            notififcation.notifyBefore
           );
           const tsType = type as keyof typeof periodTypeMap;
           initialNotificationPeriod.push({
@@ -556,29 +550,16 @@ const EventDetails = ({
     setPreviewOpen(true);
   };
 
-
-
-
   // 16:00 => 1600 for number mask
   const convertTimeStringToNumber = (timeString: string) =>
     timeString.split(":").join("");
-
 
   const handleClose = () => setIsOpenModalConfirm(false);
 
   return (
     <>
-      {/* <Snackbar
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        open={successMessageOpen}
-        autoHideDuration={3000}
-        onClose={() => setSuccessMessageOpen(false)}
-      >
-        <MuiAlert severity="success">Event has been saved</MuiAlert>
-      </Snackbar> */}
+      <SnackbarComponents />
+
       <Dialog
         classes={{
           paper: classes.modal,
@@ -602,7 +583,7 @@ const EventDetails = ({
           </Grid>
         </DialogTitle> */}
         <DialogContent>
-          <FormComponent/>
+          <FormComponent />
         </DialogContent>
       </Dialog>
       <EventDeleteModal
