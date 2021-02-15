@@ -93,77 +93,77 @@ const EventDetails = ({
     }
   }, [createEventData, createError, setOpen]);
 
-  // useEffect(() => {
-  //   if (!sharedDataLoading && sharedData?.sharedAccess?.targetUsers) {
-  //     let sharedUsers: User[] = [];
+  useEffect(() => {
+    if (!sharedDataLoading && sharedData?.sharedAccess?.targetUsers) {
+      let sharedUsers: User[] = [];
 
-  //     if (sharedData?.sharedAccess?.targetUsers) {
-  //       sharedUsers = [...sharedData?.sharedAccess?.targetUsers];
-  //       const isInclude = sharedUsers.find(({ id }) => id === currentUser.id);
-  //       if (!isInclude) {
-  //         sharedUsers.unshift(currentUser);
-  //       }
-  //     }
+      if (sharedData?.sharedAccess?.targetUsers) {
+        sharedUsers = [...sharedData?.sharedAccess?.targetUsers];
+        const isInclude = sharedUsers.find(({ id }) => id === currentUser.id);
+        if (!isInclude) {
+          sharedUsers.unshift(currentUser);
+        }
+      }
 
-  //     const initialNotificationPeriod: NotificationItem[] = [];
+      const initialNotificationPeriod: NotificationItem[] = [];
 
-  //     const periodTypeMap = {
-  //       weeks: "Week",
-  //       days: "Day",
-  //       hours: "Hour",
-  //       minutes: "Minute",
-  //     };
+      const periodTypeMap = {
+        weeks: "Week",
+        days: "Day",
+        hours: "Hour",
+        minutes: "Minute",
+      };
 
-  //     if (!event) {
-  //       if (
-  //         notificationSettingsData?.notificationSettingsByTag?.items &&
-  //         notificationSettingsData?.notificationSettingsByTag?.items?.length > 0
-  //       ) {
-  //         notificationSettingsData.notificationSettingsByTag.items.forEach(
-  //           (item) => {
-  //             const { type, value } = convertMStoTimeLeft(item.notifyBefore);
-  //             const tsType = type as keyof typeof periodTypeMap;
-  //             sharedUsers.forEach((sharedUser) => {
-  //               initialNotificationPeriod.push({
-  //                 userId: sharedUser.id,
-  //                 periodType: periodTypeMap[tsType] as PeriodType,
-  //                 period: value.toString(),
-  //               });
-  //             });
-  //           },
-  //         );
-  //       } else {
-  //         sharedUsers.forEach((sharedUser) => {
-  //           initialNotificationPeriod.push({
-  //             userId: sharedUser.id,
-  //             periodType: periodTypeMap.minutes as PeriodType,
-  //             period: "10",
-  //           });
-  //         });
-  //       }
-  //     } else if (event?.notifications && event?.notifications?.length > 0) {
-  //       event.notifications.forEach((notififcation) => {
-  //         const { type, value } = convertMStoTimeLeft(
-  //           notififcation.notifyBefore,
-  //         );
-  //         const tsType = type as keyof typeof periodTypeMap;
-  //         initialNotificationPeriod.push({
-  //           userId: notififcation.userId,
-  //           periodType: periodTypeMap[tsType] as PeriodType,
-  //           period: value.toString(),
-  //         });
-  //       });
-  //     }
-  //     setNotifications(initialNotificationPeriod);
-  //     setSharingUsers(sharedUsers);
-  //   }
-  // }, [
-  //   event,
-  //   sharedDataLoading,
-  //   notificationSettingsData,
-  //   currentUser,
-  //   sharedData,
-  // ]);
+      if (!event) {
+        if (
+          notificationSettingsData?.notificationSettingsByTag?.items &&
+          notificationSettingsData?.notificationSettingsByTag?.items?.length > 0
+        ) {
+          notificationSettingsData.notificationSettingsByTag.items.forEach(
+            (item) => {
+              const { type, value } = convertMStoTimeLeft(item.notifyBefore);
+              const tsType = type as keyof typeof periodTypeMap;
+              sharedUsers.forEach((sharedUser) => {
+                initialNotificationPeriod.push({
+                  userId: sharedUser.id,
+                  periodType: periodTypeMap[tsType] as PeriodType,
+                  period: value.toString(),
+                });
+              });
+            },
+          );
+        } else {
+          sharedUsers.forEach((sharedUser) => {
+            initialNotificationPeriod.push({
+              userId: sharedUser.id,
+              periodType: periodTypeMap.minutes as PeriodType,
+              period: "10",
+            });
+          });
+        }
+      } else if (event?.notifications && event?.notifications?.length > 0) {
+        event.notifications.forEach((notififcation) => {
+          const { type, value } = convertMStoTimeLeft(
+            notififcation.notifyBefore,
+          );
+          const tsType = type as keyof typeof periodTypeMap;
+          initialNotificationPeriod.push({
+            userId: notififcation.userId,
+            periodType: periodTypeMap[tsType] as PeriodType,
+            period: value.toString(),
+          });
+        });
+      }
+      setNotifications(initialNotificationPeriod);
+      setSharingUsers(sharedUsers);
+    }
+  }, [
+    event,
+    sharedDataLoading,
+    notificationSettingsData,
+    currentUser,
+    sharedData,
+  ]);
 
   const handleDialogClose = () => {
     setOpen(false);
