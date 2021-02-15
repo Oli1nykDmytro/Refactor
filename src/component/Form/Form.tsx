@@ -122,6 +122,15 @@ export const Form = (): React.FC => {
       endTimeUTC = moment(endTime).utcOffset(0, true).format();
     }
 
+    export const periodTypes = ["Minute", "Hour", "Day", "Week"];
+
+    export const periodRate = {
+      Minute: 1000 * 60,
+      Hour: 1000 * 60 * 60,
+      Day: 1000 * 60 * 60 * 24,
+      Week: 1000 * 60 * 60 * 24 * 7,
+    };
+    
 
   const handleFormSave = async (eventDom: React.FormEvent<HTMLFormElement>) => {
     eventDom.preventDefault();
