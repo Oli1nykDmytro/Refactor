@@ -18,7 +18,7 @@ import {
   Box,
   InputAdornment,
 } from "@material-ui/core";
-import MuiAlert from "@material-ui/lab/Alert";
+
 
 import { CloseOutlined as CloseOutlinedIcon } from "@material-ui/icons";
 
@@ -42,6 +42,9 @@ import { ReactComponent as FileIcon } from "../icons/fileIcon.svg";
 
 import {EventDetailsProps, NotificationItem} from './src/typeDefs/type-details'
 
+
+//component 
+import FormComponent from './src/component/Form'
 //style 
 import useStyles from './src/style/type-style'
 
@@ -88,21 +91,21 @@ type ActionType = "userId" | "periodType" | "period";
 type PeriodType = "Minute" | "Hour" | "Day" | "Week";
 
 type EventDetailsProps = {
-  event?: Event;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  onDialogClose?: () => void;
-  refetchEvents?: () => void;
-  message?: Maybe<Message>;
-  onEventCreation?: (eventId: string, event: Event) => void;
-  onCreateEventFromMessageItem?: (eventId: string, event: Event) => void;
-  currentUser: User;
-  onEventDelition?: () => void;
-  messageId?: string;
-  messageTitle?: string | null | undefined;
-  isMessageDone?: boolean | null | undefined;
-  isMessageDeleted?: boolean | null | undefined;
-};
+    event?: Event;
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    onDialogClose?: () => void;
+    refetchEvents?: () => void;
+    message?: Maybe<Message>;
+    onEventCreation?: (eventId: string, event: Event) => void;
+    onCreateEventFromMessageItem?: (eventId: string, event: Event) => void;
+    currentUser: User;
+    onEventDelition?: () => void;
+    messageId?: string;
+    messageTitle?: string | null | undefined;
+    isMessageDone?: boolean | null | undefined;
+    isMessageDeleted?: boolean | null | undefined;
+  };
 
 
 
@@ -428,77 +431,7 @@ const EventDetails = ({
       attachmentIds: files.map((attach) => attach.id),
     };
   };
-  // const handleFormSave = async (eventDom: React.FormEvent<HTMLFormElement>) => {
-  //   eventDom.preventDefault();
 
-  //   const {
-  //     title,
-  //     startTime,
-  //     endTime,
-  //     location,
-  //     description,
-  //     notifications,
-  //     attachmentIds,
-  //   } = normaliseEventForm();
-
-  //   if (event) {
-  //     await updateEventMutation({
-  //       variables: {
-  //         eventId: event.id,
-  //         title,
-  //         startTime,
-  //         endTime,
-  //         location,
-  //         description,
-  //         allDay,
-  //         notifications,
-  //         attachmentIds,
-  //       },
-  //     }).catch((err) => console.log(`Event update error: ${err}`));
-  //   } else if (message) {
-  //     try {
-  //       // TODO: Fix the types. In rush atm to demo this
-  //       const newEvent: any = await createEventMutation({
-  //         variables: {
-  //           messageId: message.id,
-  //           title,
-  //           startTime,
-  //           endTime,
-  //           location,
-  //           description,
-  //           allDay,
-  //           notifications,
-  //           attachmentIds,
-  //         },
-  //       });
-  //       const data = newEvent.data;
-
-  //       const hasConflict = hasGraphQlConflictError();
-  //       if (hasConflict) {
-  //         return;
-  //       }
-
-  //       if (data?.createEvent && onCreateEventFromMessageItem) {
-  //         onCreateEventFromMessageItem(data.createEvent.id, data?.createEvent);
-  //       }
-  //       if (data?.createEvent && onEventCreation) {
-  //         await onEventCreation(data.createEvent.id, data?.createEvent);
-  //       }
-  //     } catch (error) {
-  //       console.log(`Event update error: ${error}`);
-  //     }
-  //   } else {
-  //     return;
-  //   }
-  //   if (!createError && !updateError) {
-  //     if (refetchEvents) {
-  //       refetchEvents();
-  //     }
-  //     if (onDialogClose) {
-  //       onDialogClose();
-  //     }
-  //   }
-  // };
 
   const handleDeleteEvent = async () => {
     if ("id" in eventForm) {
@@ -538,28 +471,6 @@ const EventDetails = ({
     }
   }, [createEventData, createError, setOpen]);
 
-  // useEffect(() => {
-  //   const chipSharedAccessValues: string[] = sharedDataAccess?.sharedAccess
-  //     ?.targetUsers
-  //     ? sharedDataAccess.sharedAccess.targetUsers.map(
-  //         (user: User) => `${user?.name}'s Calendar`,
-  //       )
-  //     : [];
-
-  //   let userCalendars: string[] = [];
-  //   if (currentUser) {
-  //     userCalendars =
-  //       currentUser.eventCalendars.map(
-  //         (calendar: Calendar) => `${calendar.name}`,
-  //       ) || [];
-  //   }
-
-  //   const chipValues = [...chipSharedAccessValues, ...userCalendars];
-  //   if (event?.nylasCalendarName) {
-  //     chipValues.unshift(event.nylasCalendarName);
-  //   }
-  //   setCalendarChips(chipValues);
-  // }, [event, sharedDataAccess, currentUser]);
 
   useEffect(() => {
     if (!sharedDataLoading && sharedData?.sharedAccess?.targetUsers) {
@@ -645,71 +556,13 @@ const EventDetails = ({
     setPreviewOpen(true);
   };
 
-  // const handleAllDay = () => {
-  //   if (allDay) {
-  //     setAllDay(false);
-  //     dispatch({
-  //       field: "startTime",
-  //       value: allDayBufferStartTime,
-  //     });
-  //     dispatch({
-  //       field: "endTime",
-  //       value: allDayBufferEndTime,
-  //     });
-  //   } else {
-  //     const isAfter = moment(moment(eventForm.startDate).format("l")).isAfter(
-  //       eventForm.endDate,
-  //     );
 
-  //     if (isAfter) {
-  //       dispatch({
-  //         field: "endDate",
-  //         value: eventForm.startDate,
-  //       });
-  //     }
-
-  //     setAllDay(true);
-  //     setAllDayBufferStartTime(eventForm.startTime);
-  //     setAllDayBufferEndTime(eventForm.endTime);
-
-  //     dispatch({
-  //       field: "startTime",
-  //       value: "00:00",
-  //     });
-  //     dispatch({
-  //       field: "endTime",
-  //       value: "23:59",
-  //     });
-  //   }
-  // };
-
-  // const handleStartDateChange = (date: any) => {
-  //   if (!date) return;
-  //   const isAfter = moment(moment(date).format("l")).isAfter(eventForm.endDate);
-
-  //   if (allDay && isAfter) {
-  //     dispatch({
-  //       field: "endDate",
-  //       value: moment(date).format("l"),
-  //     });
-  //   }
-  //   dispatch({
-  //     field: "startDate",
-  //     value: moment(date).format("l"),
-  //   });
-  // };
 
 
   // 16:00 => 1600 for number mask
   const convertTimeStringToNumber = (timeString: string) =>
     timeString.split(":").join("");
 
-  const link = createLink(
-    currentUser.email,
-    messageId,
-    isMessageDone,
-    isMessageDeleted,
-  );
 
   const handleClose = () => setIsOpenModalConfirm(false);
 
@@ -749,411 +602,7 @@ const EventDetails = ({
           </Grid>
         </DialogTitle> */}
         <DialogContent>
-          {/* <form onSubmit={handleFormSave}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <Grid
-                className={classes.headerPart}
-                container
-                spacing={2}
-                alignItems="center"
-              >
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                    label="Title"
-                    value={eventForm.title}
-                    onChange={(e: React.FormEvent<HTMLFormElement>) =>
-                      dispatch({
-                        field: "title",
-                        value: e.currentTarget.value,
-                      })
-                    }
-                  />
-                </Grid>
-                <div className={classes.dateRow}>
-                  <div className={classes.dateCol}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <DatePicker
-                        autoOk
-                        className={classes.dateInput}
-                        disableToolbar
-                        disablePast={event ? false : true}
-                        variant="inline"
-                        format="M/d/yyyy"
-                        value={eventForm.startDate}
-                        inputVariant="outlined"
-                        onChange={handleStartDateChange}
-                        TextFieldComponent={(props) => (
-                          <TextField
-                            {...props}
-                            size="small"
-                            variant="outlined"
-                            label="Start Date"
-                            InputProps={{
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <DropdownIcon />
-                                </InputAdornment>
-                              ),
-                            }}
-                          />
-                        )}
-                      />
-                    </MuiPickersUtilsProvider>
-                  </div>
-                  <div className={classes.dateCol}>
-                    <TextField
-                      className={classes.timeInput}
-                      required
-                      size="small"
-                      label="Start Time"
-                      variant="outlined"
-                      value={convertTimeStringToNumber(eventForm.startTime)}
-                      InputProps={{
-                        inputComponent: NumberFormatTime as any,
-                      }}
-                      onChange={(e: any) =>
-                        dispatch({
-                          field: "startTime",
-                          value: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div
-                    className={`${classes.dateCol} ${classes.paddingBottom}`}
-                  >
-                    To
-                  </div>
-                  <div className={classes.dateCol}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <DatePicker
-                        autoOk
-                        className={classes.dateInput}
-                        disablePast={event ? false : true}
-                        disableToolbar
-                        variant="inline"
-                        format="M/d/yyyy"
-                        value={eventForm.endDate}
-                        inputVariant="outlined"
-                        onChange={(date) => {
-                          if (!date) return;
-                          dispatch({
-                            field: "endDate",
-                            value: moment(date).format("l"),
-                          });
-                        }}
-                        TextFieldComponent={(props) => (
-                          <TextField
-                            {...props}
-                            size="small"
-                            variant="outlined"
-                            label="End Date"
-                            InputProps={{
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <DropdownIcon />
-                                </InputAdornment>
-                              ),
-                            }}
-                          />
-                        )}
-                      />
-                    </MuiPickersUtilsProvider>
-                  </div>
-                  <div className={classes.dateCol}>
-                    <TextField
-                      className={classes.timeInput}
-                      required
-                      size="small"
-                      label="End Time"
-                      variant="outlined"
-                      value={convertTimeStringToNumber(eventForm.endTime)}
-                      InputProps={{
-                        inputComponent: NumberFormatTime as any,
-                      }}
-                      onChange={(e: any) =>
-                        dispatch({
-                          field: "endTime",
-                          value: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div
-                    className={`${classes.dateCol} ${classes.paddingBottom}`}
-                  >
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          classes={{
-                            root: classes.switchRoot,
-                            switchBase: classes.switchBase,
-                            thumb: classes.switchThumb,
-                            track: classes.switchTrack,
-                          }}
-                          checked={allDay}
-                          color="primary"
-                          onClick={handleAllDay}
-                        />
-                      }
-                      label="All Day"
-                    />
-                  </div>
-                </div>
-              </Grid>
-              <Grid container spacing={2} alignItems="center">
-                <Grid item xs={9}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                    label="Calendar"
-                    value={calendarChips}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  container
-                  xs={3}
-                  alignItems="center"
-                  className={
-                    hasGraphQlConflictError() ? classes.conflictError : ""
-                  }
-                >
-                  <Box display="flex" mt={4}>
-                    <ErrorOutlineIcon className={classes.icon} />
-                    &nbsp;
-                    {event?.conflict || hasGraphQlConflictError() ? (
-                      <>Has conflict.</>
-                    ) : (
-                      <>No Conflict</>
-                    )}
-                  </Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                    label="Address"
-                    value={eventForm.location}
-                    onChange={(e: React.FormEvent<HTMLFormElement>) =>
-                      dispatch({
-                        field: "location",
-                        value: e.currentTarget.value,
-                      })
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Grid container spacing={2} alignItems="flex-end">
-                    <Grid item xs={6}>
-                      <Link className={classes.linkStyles} to={link}>
-                        <TextField
-                          onClick={() => setOpen(false)}
-                          fullWidth
-                          size="small"
-                          variant="outlined"
-                          label="Mail"
-                          InputProps={{
-                            className: classes.multilineColor,
-                          }}
-                          value={
-                            messageTitle ||
-                            message?.caseStyle ||
-                            message?.subject ||
-                            event?.message?.caseStyle ||
-                            ""
-                          }
-                        />
-                      </Link>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <ChipsInput
-                        value={
-                          event?.message?.tags?.map((tag) => tag.name) ||
-                          message?.tags.map((tag) => tag.name) ||
-                          []
-                        }
-                        label="Category:"
-                        isLineType
-                        borderType="square"
-                        withBorder
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                {eventForm.notifications.map(
-                  (notify: NotificationItem, index: number) => (
-                    <>
-                      <Grid item xs={4}>
-                        <FormControl variant="outlined" size="small" fullWidth>
-                          <Select
-                            value={notify.userId}
-                            onChange={(e) =>
-                              dispatch({
-                                field: `notification:${index}:userId`,
-                                value: e.target.value as string,
-                              })
-                            }
-                          >
-                            <MenuItem value="none">
-                              <em>None</em>
-                            </MenuItem>
-                            {sharingUsers.map((item) => (
-                              <MenuItem value={item.id} key={item.id}>
-                                <em>{`${item.name} (Notification)`}</em>
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <TextFieldMaterial
-                          fullWidth
-                          value={notify.period}
-                          type="number"
-                          size="small"
-                          variant="outlined"
-                          onChange={(e) =>
-                            dispatch({
-                              field: `notification:${index}:period`,
-                              value: e.target.value as string,
-                            })
-                          }
-                        />
-                      </Grid>
-                      <Grid item xs={3}>
-                        <FormControl variant="outlined" size="small" fullWidth>
-                          <Select
-                            value={notify.periodType}
-                            onChange={(e) =>
-                              dispatch({
-                                field: `notification:${index}:periodType`,
-                                value: e.target.value as string,
-                              })
-                            }
-                          >
-                            {periodTypes.map((periodType) => (
-                              <MenuItem key={periodType} value={periodType}>
-                                {`${periodType}${
-                                  notify.period === "1" ? "" : "s"
-                                } Before`}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <IconButton
-                          onClick={() => {
-                            dispatch({
-                              field: `notification:${index}:remove`,
-                            });
-                          }}
-                        >
-                          <CloseOutlinedIcon className={classes.closeIcon} />
-                        </IconButton>
-                      </Grid>
-                    </>
-                  ),
-                )}
-                <Grid item xs={12}>
-                  <Button
-                    className={classes.addReminder}
-                    onClick={() => {
-                      dispatch({
-                        field: `notification:0:add`,
-                      });
-                    }}
-                    disableRipple
-                  >
-                    Add Reminder
-                  </Button>
-                </Grid>
-                {files ? (
-                  <>
-                    <Grid item xs={12}>
-                      <ChipsInput
-                        isLineType
-                        type="files"
-                        label="Attached File:"
-                        borderType="square"
-                        onClick={handleChipClick}
-                        value={
-                          files.map((attachment) => attachment?.name || "") ||
-                          []
-                        }
-                        icon={<FileIcon width={13} height={13} />}
-                        onDeleteChip={(index) =>
-                          setFiles([
-                            ...files.slice(0, index),
-                            ...files.slice(index + 1),
-                          ])
-                        }
-                      />
-                      {files ? (
-                        <PdfPreview
-                          open={previewOpen}
-                          setOpen={setPreviewOpen}
-                          files={files as File[]}
-                          selectedFileIndex={currentAttachmentIndex}
-                          setFileIndex={setCurrentAttachmentIndex}
-                        />
-                      ) : null}
-                    </Grid>
-                  </>
-                ) : null}
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    variant="outlined"
-                    label="Note"
-                    multiline
-                    rows={5}
-                    value={eventForm.description}
-                    onChange={(e: React.FormEvent<HTMLFormElement>) =>
-                      dispatch({
-                        field: "description",
-                        value: e.currentTarget.value,
-                      })
-                    }
-                  />
-                </Grid>
-              </Grid>
-            </MuiPickersUtilsProvider>
-            <Grid
-              className={classes.actions}
-              container
-              alignItems="center"
-              justify="space-between"
-            >
-              <Grid item className={classes.lastUpdated}>
-                {"Event update time goes here"}
-              </Grid>
-              <Grid item>
-                <Button
-                  className={classes.deleteButton}
-                  onClick={() => setIsOpenModalConfirm(true)}
-                >
-                  Delete
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disableElevation
-                  type="submit"
-                  disabled={updateLoading || createLoading}
-                >
-                  {updateLoading ? <CircularProgress size={25} /> : "Save"}
-                </Button>
-              </Grid>
-            </Grid>
-          </form> */}
+          <FormComponent/>
         </DialogContent>
       </Dialog>
       <EventDeleteModal
