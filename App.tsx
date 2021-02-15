@@ -73,7 +73,7 @@ import ChipsInput from "./ChipsInput";
 import { ReactComponent as DropdownIcon } from "../icons/dropdownRegular.svg";
 import NumberFormatTime from "../common/NumberFormatTime";
 import { Link } from "react-router-dom";
-import EventDeleteModal from "./EventDeleteModal";
+// import EventDeleteModal from "./EventDeleteModal";
 
 
 interface EventForm {
@@ -86,6 +86,26 @@ interface EventForm {
 
 type ActionType = "userId" | "periodType" | "period";
 type PeriodType = "Minute" | "Hour" | "Day" | "Week";
+
+type EventDetailsProps = {
+  event?: Event;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  onDialogClose?: () => void;
+  refetchEvents?: () => void;
+  message?: Maybe<Message>;
+  onEventCreation?: (eventId: string, event: Event) => void;
+  onCreateEventFromMessageItem?: (eventId: string, event: Event) => void;
+  currentUser: User;
+  onEventDelition?: () => void;
+  messageId?: string;
+  messageTitle?: string | null | undefined;
+  isMessageDone?: boolean | null | undefined;
+  isMessageDeleted?: boolean | null | undefined;
+};
+
+
+
 
 
 export const createLink = (
@@ -179,17 +199,18 @@ const EventDetails = ({
   const oneHourFuture = moment(now).add(1, "hours");
   const nowDateEndDate =
     Number(moment(now).format("HH")) >= 23 ? moment(now).add(1, "day") : now;
-  const [allDay, setAllDay] = useState<boolean>(false);
+  // const [allDay, setAllDay] = useState<boolean>(false);
   const [isOpenModalConfirm, setIsOpenModalConfirm] = useState<boolean>(false);
-  const [allDayBufferStartTime, setAllDayBufferStartTime] = useState("00:00");
-  const [allDayBufferEndTime, setAllDayBufferEndTime] = useState("23:59");
-  const [calendarChips, setCalendarChips] = useState<string[]>([]);
+  // const [allDayBufferStartTime, setAllDayBufferStartTime] = useState("00:00");
+  // const [allDayBufferEndTime, setAllDayBufferEndTime] = useState("23:59");
+  // const [calendarChips, setCalendarChips] = useState<string[]>([]);
   const [notifications, setNotifications] = useState<object[]>([]);
   const [sharingUsers, setSharingUsers] = useState<User[]>([]);
   const [files, setFiles] = useState<File[]>([]);
-  const [sharedDataAccess, setSharedDataAccess] = useState<
-    GetSharedAccessQuery | undefined | null
-  >(null);
+  // const [sharedDataAccess, setSharedDataAccess] = useState<
+  //   GetSharedAccessQuery | undefined | null
+  // >(null);
+
   const initialEventForm: any = {
     ...message?.eventPreview,
     ...message?.eventInfo,
@@ -407,77 +428,77 @@ const EventDetails = ({
       attachmentIds: files.map((attach) => attach.id),
     };
   };
-  const handleFormSave = async (eventDom: React.FormEvent<HTMLFormElement>) => {
-    eventDom.preventDefault();
+  // const handleFormSave = async (eventDom: React.FormEvent<HTMLFormElement>) => {
+  //   eventDom.preventDefault();
 
-    const {
-      title,
-      startTime,
-      endTime,
-      location,
-      description,
-      notifications,
-      attachmentIds,
-    } = normaliseEventForm();
+  //   const {
+  //     title,
+  //     startTime,
+  //     endTime,
+  //     location,
+  //     description,
+  //     notifications,
+  //     attachmentIds,
+  //   } = normaliseEventForm();
 
-    if (event) {
-      await updateEventMutation({
-        variables: {
-          eventId: event.id,
-          title,
-          startTime,
-          endTime,
-          location,
-          description,
-          allDay,
-          notifications,
-          attachmentIds,
-        },
-      }).catch((err) => console.log(`Event update error: ${err}`));
-    } else if (message) {
-      try {
-        // TODO: Fix the types. In rush atm to demo this
-        const newEvent: any = await createEventMutation({
-          variables: {
-            messageId: message.id,
-            title,
-            startTime,
-            endTime,
-            location,
-            description,
-            allDay,
-            notifications,
-            attachmentIds,
-          },
-        });
-        const data = newEvent.data;
+  //   if (event) {
+  //     await updateEventMutation({
+  //       variables: {
+  //         eventId: event.id,
+  //         title,
+  //         startTime,
+  //         endTime,
+  //         location,
+  //         description,
+  //         allDay,
+  //         notifications,
+  //         attachmentIds,
+  //       },
+  //     }).catch((err) => console.log(`Event update error: ${err}`));
+  //   } else if (message) {
+  //     try {
+  //       // TODO: Fix the types. In rush atm to demo this
+  //       const newEvent: any = await createEventMutation({
+  //         variables: {
+  //           messageId: message.id,
+  //           title,
+  //           startTime,
+  //           endTime,
+  //           location,
+  //           description,
+  //           allDay,
+  //           notifications,
+  //           attachmentIds,
+  //         },
+  //       });
+  //       const data = newEvent.data;
 
-        const hasConflict = hasGraphQlConflictError();
-        if (hasConflict) {
-          return;
-        }
+  //       const hasConflict = hasGraphQlConflictError();
+  //       if (hasConflict) {
+  //         return;
+  //       }
 
-        if (data?.createEvent && onCreateEventFromMessageItem) {
-          onCreateEventFromMessageItem(data.createEvent.id, data?.createEvent);
-        }
-        if (data?.createEvent && onEventCreation) {
-          await onEventCreation(data.createEvent.id, data?.createEvent);
-        }
-      } catch (error) {
-        console.log(`Event update error: ${error}`);
-      }
-    } else {
-      return;
-    }
-    if (!createError && !updateError) {
-      if (refetchEvents) {
-        refetchEvents();
-      }
-      if (onDialogClose) {
-        onDialogClose();
-      }
-    }
-  };
+  //       if (data?.createEvent && onCreateEventFromMessageItem) {
+  //         onCreateEventFromMessageItem(data.createEvent.id, data?.createEvent);
+  //       }
+  //       if (data?.createEvent && onEventCreation) {
+  //         await onEventCreation(data.createEvent.id, data?.createEvent);
+  //       }
+  //     } catch (error) {
+  //       console.log(`Event update error: ${error}`);
+  //     }
+  //   } else {
+  //     return;
+  //   }
+  //   if (!createError && !updateError) {
+  //     if (refetchEvents) {
+  //       refetchEvents();
+  //     }
+  //     if (onDialogClose) {
+  //       onDialogClose();
+  //     }
+  //   }
+  // };
 
   const handleDeleteEvent = async () => {
     if ("id" in eventForm) {
@@ -517,28 +538,28 @@ const EventDetails = ({
     }
   }, [createEventData, createError, setOpen]);
 
-  useEffect(() => {
-    const chipSharedAccessValues: string[] = sharedDataAccess?.sharedAccess
-      ?.targetUsers
-      ? sharedDataAccess.sharedAccess.targetUsers.map(
-          (user: User) => `${user?.name}'s Calendar`,
-        )
-      : [];
+  // useEffect(() => {
+  //   const chipSharedAccessValues: string[] = sharedDataAccess?.sharedAccess
+  //     ?.targetUsers
+  //     ? sharedDataAccess.sharedAccess.targetUsers.map(
+  //         (user: User) => `${user?.name}'s Calendar`,
+  //       )
+  //     : [];
 
-    let userCalendars: string[] = [];
-    if (currentUser) {
-      userCalendars =
-        currentUser.eventCalendars.map(
-          (calendar: Calendar) => `${calendar.name}`,
-        ) || [];
-    }
+  //   let userCalendars: string[] = [];
+  //   if (currentUser) {
+  //     userCalendars =
+  //       currentUser.eventCalendars.map(
+  //         (calendar: Calendar) => `${calendar.name}`,
+  //       ) || [];
+  //   }
 
-    const chipValues = [...chipSharedAccessValues, ...userCalendars];
-    if (event?.nylasCalendarName) {
-      chipValues.unshift(event.nylasCalendarName);
-    }
-    setCalendarChips(chipValues);
-  }, [event, sharedDataAccess, currentUser]);
+  //   const chipValues = [...chipSharedAccessValues, ...userCalendars];
+  //   if (event?.nylasCalendarName) {
+  //     chipValues.unshift(event.nylasCalendarName);
+  //   }
+  //   setCalendarChips(chipValues);
+  // }, [event, sharedDataAccess, currentUser]);
 
   useEffect(() => {
     if (!sharedDataLoading && sharedData?.sharedAccess?.targetUsers) {
@@ -624,59 +645,60 @@ const EventDetails = ({
     setPreviewOpen(true);
   };
 
-  const handleAllDay = () => {
-    if (allDay) {
-      setAllDay(false);
-      dispatch({
-        field: "startTime",
-        value: allDayBufferStartTime,
-      });
-      dispatch({
-        field: "endTime",
-        value: allDayBufferEndTime,
-      });
-    } else {
-      const isAfter = moment(moment(eventForm.startDate).format("l")).isAfter(
-        eventForm.endDate,
-      );
+  // const handleAllDay = () => {
+  //   if (allDay) {
+  //     setAllDay(false);
+  //     dispatch({
+  //       field: "startTime",
+  //       value: allDayBufferStartTime,
+  //     });
+  //     dispatch({
+  //       field: "endTime",
+  //       value: allDayBufferEndTime,
+  //     });
+  //   } else {
+  //     const isAfter = moment(moment(eventForm.startDate).format("l")).isAfter(
+  //       eventForm.endDate,
+  //     );
 
-      if (isAfter) {
-        dispatch({
-          field: "endDate",
-          value: eventForm.startDate,
-        });
-      }
+  //     if (isAfter) {
+  //       dispatch({
+  //         field: "endDate",
+  //         value: eventForm.startDate,
+  //       });
+  //     }
 
-      setAllDay(true);
-      setAllDayBufferStartTime(eventForm.startTime);
-      setAllDayBufferEndTime(eventForm.endTime);
+  //     setAllDay(true);
+  //     setAllDayBufferStartTime(eventForm.startTime);
+  //     setAllDayBufferEndTime(eventForm.endTime);
 
-      dispatch({
-        field: "startTime",
-        value: "00:00",
-      });
-      dispatch({
-        field: "endTime",
-        value: "23:59",
-      });
-    }
-  };
+  //     dispatch({
+  //       field: "startTime",
+  //       value: "00:00",
+  //     });
+  //     dispatch({
+  //       field: "endTime",
+  //       value: "23:59",
+  //     });
+  //   }
+  // };
 
-  const handleStartDateChange = (date: any) => {
-    if (!date) return;
-    const isAfter = moment(moment(date).format("l")).isAfter(eventForm.endDate);
+  // const handleStartDateChange = (date: any) => {
+  //   if (!date) return;
+  //   const isAfter = moment(moment(date).format("l")).isAfter(eventForm.endDate);
 
-    if (allDay && isAfter) {
-      dispatch({
-        field: "endDate",
-        value: moment(date).format("l"),
-      });
-    }
-    dispatch({
-      field: "startDate",
-      value: moment(date).format("l"),
-    });
-  };
+  //   if (allDay && isAfter) {
+  //     dispatch({
+  //       field: "endDate",
+  //       value: moment(date).format("l"),
+  //     });
+  //   }
+  //   dispatch({
+  //     field: "startDate",
+  //     value: moment(date).format("l"),
+  //   });
+  // };
+
 
   // 16:00 => 1600 for number mask
   const convertTimeStringToNumber = (timeString: string) =>
@@ -693,7 +715,7 @@ const EventDetails = ({
 
   return (
     <>
-      <Snackbar
+      {/* <Snackbar
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "left",
@@ -703,7 +725,7 @@ const EventDetails = ({
         onClose={() => setSuccessMessageOpen(false)}
       >
         <MuiAlert severity="success">Event has been saved</MuiAlert>
-      </Snackbar>
+      </Snackbar> */}
       <Dialog
         classes={{
           paper: classes.modal,
@@ -711,7 +733,7 @@ const EventDetails = ({
         open={open}
         onClose={handleDialogClose}
       >
-        <DialogTitle className={classes.modalTitle}>
+        {/* <DialogTitle className={classes.modalTitle}>
           <Grid container justify="space-between" alignItems="center">
             <Grid item>{message ? "Create new event" : "Event Details"}</Grid>
             <Grid item>
@@ -725,9 +747,9 @@ const EventDetails = ({
               </IconButton>
             </Grid>
           </Grid>
-        </DialogTitle>
+        </DialogTitle> */}
         <DialogContent>
-          <form onSubmit={handleFormSave}>
+          {/* <form onSubmit={handleFormSave}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <Grid
                 className={classes.headerPart}
@@ -1131,7 +1153,7 @@ const EventDetails = ({
                 </Button>
               </Grid>
             </Grid>
-          </form>
+          </form> */}
         </DialogContent>
       </Dialog>
       <EventDeleteModal
