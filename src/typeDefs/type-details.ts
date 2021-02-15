@@ -14,3 +14,10 @@ type EventDetailsProps = {
     isMessageDone?: boolean | null | undefined;
     isMessageDeleted?: boolean | null | undefined;
   };
+
+
+  type NotificationItem = {
+    userId: string;
+    period: string;
+    periodType: PeriodType;
+  };

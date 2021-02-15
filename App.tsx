@@ -40,10 +40,13 @@ import { ReactComponent as ErrorOutlineIcon } from "../icons/errorOutline.svg";
 import { ReactComponent as FileIcon } from "../icons/fileIcon.svg";
 
 
-import EventDetailsProps from './src/typeDefs/type-details'
+import {EventDetailsProps, NotificationItem} from './src/typeDefs/type-details'
 
 //style 
 import useStyles from './src/style/type-style'
+
+// periodTime 
+import { periodTypes, periodRate } from './src/timePeriod/period'
 import {
   File,
   Event,
@@ -73,24 +76,6 @@ import { Link } from "react-router-dom";
 import EventDeleteModal from "./EventDeleteModal";
 
 
-
-type EventDetailsProps = {
-  event?: Event;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  onDialogClose?: () => void;
-  refetchEvents?: () => void;
-  message?: Maybe<Message>;
-  onEventCreation?: (eventId: string, event: Event) => void;
-  onCreateEventFromMessageItem?: (eventId: string, event: Event) => void;
-  currentUser: User;
-  onEventDelition?: () => void;
-  messageId?: string;
-  messageTitle?: string | null | undefined;
-  isMessageDone?: boolean | null | undefined;
-  isMessageDeleted?: boolean | null | undefined;
-};
-
 interface EventForm {
   startDate: string;
   startTime: string;
@@ -99,22 +84,9 @@ interface EventForm {
   notifications: NotificationItem[];
 }
 
-type NotificationItem = {
-  userId: string;
-  period: string;
-  periodType: PeriodType;
-};
-
 type ActionType = "userId" | "periodType" | "period";
 type PeriodType = "Minute" | "Hour" | "Day" | "Week";
 
-const periodTypes = ["Minute", "Hour", "Day", "Week"];
-const periodRate = {
-  Minute: 1000 * 60,
-  Hour: 1000 * 60 * 60,
-  Day: 1000 * 60 * 60 * 24,
-  Week: 1000 * 60 * 60 * 24 * 7,
-};
 
 export const createLink = (
   userEmail: string,
