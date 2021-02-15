@@ -4,7 +4,12 @@ import { Snackbar } from "@material-ui/core";
 
 export const SnackbarComponents = (): React.FC => {
   const [successMessageOpen, setSuccessMessageOpen] = useState(false);
-
+  useEffect(() => {
+    if (updateEventData && !updateError) {
+      setSuccessMessageOpen(true);
+      setOpen(false);
+    }
+  }, [updateEventData, updateError, setOpen]);
   return (
     <>
       <Snackbar

@@ -13,16 +13,15 @@ import {
   Box,
   InputAdornment,
 } from "@material-ui/core";
-
-
 import DateFnsUtils from "@date-io/date-fns";
 import { PdfPreview } from "./";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import { red, blue } from "@material-ui/core/colors";
-
 import { ReactComponent as ErrorOutlineIcon } from "../icons/errorOutline.svg";
 import { ReactComponent as FileIcon } from "../icons/fileIcon.svg";
 import {reducer, initialEventForm} from '../../reducer/reducer'
+
+import { CloseOutlined as CloseOutlinedIcon } from "@material-ui/icons";
 
 import {
   File,
@@ -30,8 +29,6 @@ import {
   Calendar,
   GetSharedAccessQuery,
 } from "../graphql/generated";
-
-
 import TextField from "./TextField";
 import ChipsInput from "./ChipsInput";
 import { ReactComponent as DropdownIcon } from "../icons/dropdownRegular.svg";
@@ -39,7 +36,7 @@ import NumberFormatTime from "../common/NumberFormatTime";
 import { Link } from "react-router-dom";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import useStyles from "./src/style/type-style";
-
+import createLink from './link'
 
 
 
@@ -53,8 +50,10 @@ export const Form = (): React.FC => {
     GetSharedAccessQuery | undefined | null
   >(null);
   const [previewOpen, setPreviewOpen] = React.useState(false);
+  const [files, setFiles] = useState<File[]>([]);
   const [currentAttachmentIndex, setCurrentAttachmentIndex] = React.useState(0);
   const [eventForm, dispatch] = useReducer(reducer, initialEventForm);
+
   const link = createLink(
     currentUser.email,
     messageId,
@@ -216,6 +215,16 @@ const convertTimeStringToNumber = (timeString: string) =>
       field: "reset",
     });
   }, [event, notifications, sharingUsers]);
+
+
+  useEffect(() => {
+    const eventFiles = event?.attachments || message?.files || [];
+    if (eventFiles) {
+      setFiles(eventFiles as File[]);
+    } else {
+      setFiles([]);
+    }
+  }, [event, message]);
 
 
   const handleStartDateChange = (date: any) => {
