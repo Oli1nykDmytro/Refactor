@@ -23,6 +23,8 @@ import {reducer, initialEventForm} from '../../reducer/reducer'
 
 import { CloseOutlined as CloseOutlinedIcon } from "@material-ui/icons";
 
+import DateInput from './DateInput/input'
+
 import {
   File,
   User,
@@ -131,11 +133,6 @@ export const Form = (): React.FC => {
 
 const convertTimeStringToNumber = (timeString: string) =>
     timeString.split(":").join("");
-
- const handleChipClick = (attachmentIndex: number) => {
-    setCurrentAttachmentIndex(attachmentIndex);
-    setPreviewOpen(true);
-  };
 
     const {
       title,
@@ -311,32 +308,7 @@ const convertTimeStringToNumber = (timeString: string) =>
             <div className={classes.dateRow}>
               <div className={classes.dateCol}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <DatePicker
-                    autoOk
-                    className={classes.dateInput}
-                    disableToolbar
-                    disablePast={event ? false : true}
-                    variant="inline"
-                    format="M/d/yyyy"
-                    value={eventForm.startDate}
-                    inputVariant="outlined"
-                    onChange={handleStartDateChange}
-                    TextFieldComponent={(props) => (
-                      <TextField
-                        {...props}
-                        size="small"
-                        variant="outlined"
-                        label="Start Date"
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <DropdownIcon />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    )}
-                  />
+                  <DateInput/>
                 </MuiPickersUtilsProvider>
               </div>
               <div className={classes.dateCol}>
