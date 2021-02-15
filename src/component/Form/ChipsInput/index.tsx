@@ -1,6 +1,6 @@
 import React from 'react';
-
-
+import { ReactComponent as FileIcon } from "../icons/fileIcon.svg";
+import ChipsInput from "./ChipsInput";
 
 export const ChipsInput =({files:files,setCurrentAttachmentIndex:setCurrentAttachmentIndex,setPreviewOpen:setPreviewOpen}):React.FC =>{
     const handleChipClick = (attachmentIndex: number) => {
